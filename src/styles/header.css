@@ -1,0 +1,67 @@
+.topContainer {
+    display: flex;
+    padding: 10px 40px 5px 20px;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 0 20px rgba(0, 0, 0, .25);
+    background-color: rgba(255, 255, 255, 1);
+    transition: background-color .3s, box-shadow .3s;
+    position: sticky;
+    position: -webkit-sticky;
+    top: 0;
+    z-index: 5;
+    flex-direction: row;
+}
+
+.endContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 100px;
+}
+
+.logoContainer {
+    display: inline-flex;
+    align-items: center;
+}
+
+.logoImg {
+    float: left;
+    width: 60px;
+}
+
+.logoText {
+    font-style: normal;
+    font-weight: 900;
+    font-size: 20px;
+    padding-left: 10px;
+    color: #005403;
+    text-decoration: none;
+    line-height: 20px;
+}
+
+.aboutContainer {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    color: #525252;
+}
+
+.moreContainer {
+    font-style: normal;
+    font-weight: 400;
+    font-size: 18px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #FFFFFF;
+
+    background-color: #17C351;
+    border-radius: 20px;
+    padding: 8px 15px;
+}
+
+a {
+    text-decoration: none;
+}
