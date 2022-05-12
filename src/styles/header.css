@@ -31,6 +31,21 @@
     width: 60px;
 }
 
+@media (prefers-reduced-motion: no-preference) {
+    .logoImg {
+        animation: logoImg-spin infinite 20s linear;
+    }
+}
+
+@keyframes logoImg-spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
 .logoText {
     font-style: normal;
     font-weight: 900;
@@ -45,21 +60,24 @@
     font-style: normal;
     font-weight: 400;
     font-size: 18px;
-    color: #525252;
+    color: #005403;
 }
 
 .moreContainer {
     font-style: normal;
-    font-weight: 400;
+    font-weight: 500;
     font-size: 18px;
     display: flex;
     align-items: center;
-    text-align: center;
+    justify-content: center;
     color: #FFFFFF;
 
-    background-color: #17C351;
+    background-image: url("../assets/mask.png");
+    background-size: cover;
     border-radius: 20px;
     padding: 8px 15px;
+    height: 30px;
+    width: 120px;
 }
 
 a {

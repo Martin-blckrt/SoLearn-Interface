@@ -1,0 +1,7 @@
+.leaflet-control-zoom-out[class*="leaflet-control-zoom-out"]:hover {
+    background-color: #5b8d44;
+}
+
+.leaflet-control-zoom-in[class*="leaflet-control-zoom-in"]:hover {
+    background-color: #5b8d44;
+}

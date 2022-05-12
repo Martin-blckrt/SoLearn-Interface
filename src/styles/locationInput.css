@@ -1,0 +1,11 @@
+.MuiInputLabel-root[class*="MuiInputLabel-root"] {
+    color: #5B8D44 !important;
+}
+
+.Mui-focused {
+    color: #5B8D44 !important;
+}
+
+fieldset {
+    border-color: #5B8D44 !important;
+}

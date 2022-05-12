@@ -18,7 +18,7 @@ export default function Header() {
                     About
                 </div>
                 <div className="moreContainer">
-                    More models
+                    Get premium
                 </div>
             </div>
         </div>

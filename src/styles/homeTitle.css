@@ -1,0 +1,28 @@
+.bigContainer {
+    display: flex;
+    flex-direction: column;
+}
+
+.bigMessage {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 50px;
+    line-height: 60px;
+    color: #005403;
+    margin-top: 30px;
+    margin-bottom: 10px;
+}
+
+.your {
+    color: #0BDA51;
+    font-size: 52px;
+}
+
+.smallMessage {
+    font-style: normal;
+    font-weight: 300;
+    font-size: 18px;
+    line-height: 24px;
+    color: #005403;
+    margin-top: 10px;
+}

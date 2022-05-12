@@ -1,0 +1,14 @@
+.MuiTextField-root[class*="MuiTextField-root"][inputmode="numeric"] {
+    width: 100px;
+    margin-left: 200px;
+}
+
+.num_label {
+    color: #5b8d44;
+    margin-right: 20px;
+}
+
+.num_container {
+    display: flex;
+    flex-direction: column;
+}

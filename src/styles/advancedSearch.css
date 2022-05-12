@@ -1,0 +1,35 @@
+#panel1a-header {
+    font-style: normal;
+    font-weight: 700;
+    font-size: 20px;
+    line-height: 20px;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    color: #5B8D44;
+    margin-left: 30px;
+}
+
+.advanced_dropdown {
+    max-width: 700px;
+}
+
+.MuiPaper-root[class*="MuiPaper-root"] {
+    box-shadow: none;
+}
+
+.ac_details {
+    margin-left: 30px;
+}
+
+.advanced_container {
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+}
+
+.predict_button {
+    right: 40px;
+    bottom: 0;
+    position: absolute;
+}
