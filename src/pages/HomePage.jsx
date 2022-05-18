@@ -8,17 +8,16 @@ import Map from '../components/map/Map';
 function HomePage() {
   return (
       <div className="App">
-        <Header>
-        </Header>
-        <div className="horizontalContainer">
-          <div className="leftContainer">
+        <Header/>
+        <div className="horizontalHomeContainer">
+          <div className="leftHomeContainer">
             <HomeTitle>
             </HomeTitle>
             <AdvancedSearch>
             </AdvancedSearch>
           </div>
-          <div className="rightContainer">
-              <Map></Map>
+          <div className="rightHomeContainer">
+              <Map/>
           </div>
         </div>
       </div>

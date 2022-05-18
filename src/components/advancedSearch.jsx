@@ -1,4 +1,4 @@
-import React from "react"
+import React, {useState} from "react"
 import '../styles/advancedSearch.css';
 
 import LocationInput from "./locationInput";
@@ -10,13 +10,26 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
 import Fab from '@mui/material/Fab';
 import RightIcon from '@mui/icons-material/KeyboardArrowRight';
+import {Link} from "react-router-dom";
 
 export default function AdvancedSearch() {
+
+    const [params, setParams] = useState({
+        location: '',
+        number: 1
+    })
+
+    const handleNumberUpdate = event => {
+        setParams(prevState => {
+            return {...prevState, number: event.target.value}
+        })
+    }
+
     return (
         <div>
-            <Accordion className="advanced_dropdown">
+            <Accordion sx={{ boxShadow:"None" }} className="advanced_dropdown">
                 <AccordionSummary
-                    expandIcon={<ExpandMoreIcon />}
+                    expandIcon={<ExpandMoreIcon/>}
                     aria-controls="panel1a-content"
                     id="panel1a-header"
                     className="advancedText">
@@ -24,27 +37,24 @@ export default function AdvancedSearch() {
                 </AccordionSummary>
                 <AccordionDetails className="ac_details">
                     <div className="advanced_container">
-                        <LocationInput>
-                        </LocationInput>
-                        <NumberInput className="number">
-                        </NumberInput>
-                        <Box className="predict_button">
-                            <Fab sx={{
-                                color: 'white',
-                                bgcolor: '#5B8D44',
-                                '&:hover': {
-                                    bgcolor: '#005403',
-                                },
-                            }} aria-label="predict">
-                                <RightIcon />
-                            </Fab>
-                        </Box>
+                        <LocationInput/>
+                        <NumberInput className="number" onChange={handleNumberUpdate}/>
+                        <Link to="/results">
+                            <Box className="predict_button">
+                                <Fab sx={{
+                                    color: 'white',
+                                    bgcolor: '#5B8D44',
+                                    '&:hover': {
+                                        bgcolor: '#005403',
+                                    },
+                                }} aria-label="predict">
+                                    <RightIcon/>
+                                </Fab>
+                            </Box>
+                        </Link>
                     </div>
                 </AccordionDetails>
             </Accordion>
         </div>
     );
 }
-
-//https://mui.com/material-ui/react-progress/
-//https://mui.com/material-ui/react-snackbar/

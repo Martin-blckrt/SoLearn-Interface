@@ -3,17 +3,21 @@ import '../styles/numberInput.css';
 import NumberFormat from 'react-number-format';
 import TextField from '@mui/material/TextField';
 
+const withValueLimit = ({ floatValue }) => floatValue <= 9999999;
+
 export default function NumberInput(props) {
     return (
         <div className="num_container">
             <label className="num_label">How many panels ?</label>
             <NumberFormat
                 {...props}
-                className="num_input"
+                allowEmptyFormatting = {true}
                 allowNegative = {false}
-                value={1}
+                className="num_input"
                 customInput={TextField}
-                type="text"
+                decimalScale={0}
+                defaultValue={1}
+                isAllowed={withValueLimit}
                 thousandSeparator={' '}
             />
         </div>

@@ -1,15 +1,15 @@
-.horizontalContainer {
+.horizontalHomeContainer {
   display: flex;
   flex-direction: row;
 }
 
-.leftContainer {
+.leftHomeContainer {
   display: flex;
   flex-direction: column;
   margin-left: 50px;
 }
 
-.rightContainer {
+.rightHomeContainer {
   display: flex;
   flex-direction: row;
   padding: 20px 0 0 30px;

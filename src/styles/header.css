@@ -58,26 +58,47 @@
 
 .aboutContainer {
     font-style: normal;
-    font-weight: 400;
+    font-weight: 300;
     font-size: 18px;
     color: #005403;
+    cursor: pointer;
 }
 
-.moreContainer {
-    font-style: normal;
-    font-weight: 500;
-    font-size: 18px;
+.aboutContainer:hover {
+    font-weight: 400;
+}
+
+.premiumContainer {
     display: flex;
     align-items: center;
     justify-content: center;
     color: #FFFFFF;
-
+    cursor: pointer;
     background-image: url("../assets/mask.png");
     background-size: cover;
     border-radius: 20px;
     padding: 8px 15px;
     height: 30px;
     width: 120px;
+}
+
+.notPremiumContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 100px;
+}
+
+.accountContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 20px;
+    padding: 8px 15px;
+    height: 30px;
+    width: 150px;
 }
 
 a {
