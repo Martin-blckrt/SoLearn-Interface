@@ -14,17 +14,20 @@ class Map extends React.Component {
         this.state = {
           departements : [],
           communes : [],
-          selected_code : "00",
-          selected_commune : "00",
+          selected_code : props.dep.split(/-(.+)/s)[0],
+          selected_commune : props.advancedCode,
           dep_ref :null,
           com_ref:null,
-          meteo : {}
+          meteo : {},
         };
-        this.mapRef = React.createRef();
+        this.min_zoom = 6;
+        this.map_ref = React.createRef();
+        this.dep_refs = {};
+        this.com_refs = {};
       }
 
     componentDidMount() {
-        fetch("http://localhost:3001/api/departements/all",{
+        fetch("http://localhost:8000/geography/departements/all",{
             "method" : "GET",
             "headers" : {
                 "content-type" : "application/json"
@@ -32,21 +35,34 @@ class Map extends React.Component {
         })
         .then(data=>data.json())
         .then(geojson=>{
-            this.setState({departements : geojson});
+            const parsed = JSON.parse(geojson);
+            parsed.forEach((data)=>{
+                this.dep_refs[data.properties.code] = React.createRef();
+            });
+            this.setState({departements : parsed});
         });
     }
 
+    handlerTimeout(map){
+        this.min_zoom = Math.ceil(map.getZoom());
+    }
+
     componentDidUpdate(prevProps, prevState) {
-        // Typical usage (don't forget to compare props):
         if (this.state.dep_ref !== prevState.dep_ref && this.state.dep_ref != null) {
-            const map = this.mapRef.current;  //get native Map instance
+            const map = this.map_ref.current;  //get native Map instance
             const group = this.state.dep_ref; //get native featureGroup instance
             map.flyToBounds(group.getBounds(), {'duration':0.5});
+            setTimeout(this.handlerTimeout.bind(this),500,map);
+        }else if(this.props.advancedCode != prevProps.advancedCode){
+            const dep_datas = this.props.dep.split(/-(.+)/s);
+            this.selectDepartement(dep_datas[0], dep_datas[1]);
+            setTimeout(this.selectCommune.bind(this), 500, this.props.advancedCode);
         }
       }
 
-    selectDepartement(code, name, dep_ref){
-        fetch("http://localhost:3001/api/departements/communes/all",{
+    selectDepartement(code, name){
+        console.log(code, name);
+        fetch("http://localhost:8000/geography/departements/communes/all",{
             "method" : "POST",
             "headers" : {
                 "content-type" : "application/json"
@@ -57,17 +73,22 @@ class Map extends React.Component {
         })
         .then(data=>data.json())
         .then(geojson=>{
-            this.setState({selected_code: code, communes : geojson.features, dep_ref:dep_ref.current});
+            geojson.features.forEach((data)=>{
+                this.com_refs[data.properties.code] = React.createRef();
+            });
+            this.setState({selected_code: code, communes : geojson.features, dep_ref:this.dep_refs[code].current});
         });
     }
 
-    selectCommune(com_ref, code_commune){
+    selectCommune(code_commune){
         if(this.state.com_ref != null){
             this.state.com_ref.setStyle(greenOptions);
         }
+        console.log(this.com_refs);
+        const com_ref = this.com_refs[code_commune].current;
         com_ref.setStyle(blueOptions);
         com_ref.bringToFront();
-        this.getCityFromCommune(code_commune)
+        this.getCityFromCommune(code_commune);
         this.setState({com_ref:com_ref});
     }
 
@@ -113,21 +134,27 @@ class Map extends React.Component {
         });
     }
 
+    handlerZoomEnd(e){
+        if(this.min_zoom > e.target.getZoom()){
+            this.setState({selected_code : "00", selected_commune : "00"});
+        }
+    }
+
     render() {
         return (
             <div>
-                <MapContainer ref={this.mapRef} style={{float:"right",height:"85vh", width:"50vw", zIndex:0}} center={[46.430, 2.219]} zoom={6} scrollWheelZoom={false}>
+                <MapContainer ref={this.map_ref} style={{float:"right",height:"85vh", width:"50vw", zIndex:0}} center={[46.430, 2.219]} zoom={6} scrollWheelZoom={true} whenReady={(map)=>map.target.on("zoomend", this.handlerZoomEnd.bind(this))}>
                     <TileLayer
                         attribution='Map tiles by Carto, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
-                        url="https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png"
+                        url='https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png'
                     />
                     {
                         this.state.departements.map(geoJSON=>{
                             if(geoJSON.properties.code != this.state.selected_code){
-                                return <Departement key={geoJSON.properties.code} datas={geoJSON} selectDepartement={this.selectDepartement.bind(this)}></Departement>
+                                return <Departement depRef={this.dep_refs[geoJSON.properties.code]} key={geoJSON.properties.code} datas={geoJSON} selectDepartement={this.selectDepartement.bind(this)}></Departement>
                             }else{
                                 return this.state.communes.map(geoJSON=>{
-                                    return <Commune key={geoJSON.properties.code} datas={geoJSON} selectCommune={this.selectCommune.bind(this)}></Commune>
+                                    return <Commune comRef={this.com_refs[geoJSON.properties.code]} key={geoJSON.properties.code} datas={geoJSON} selectCommune={this.selectCommune.bind(this)}></Commune>
                                 });
                             }
                         })

@@ -8,15 +8,14 @@ const greenOptions = { color: '#13b038', fillColor: '#13b038' };
 class Departement extends React.Component {
     constructor(props){
         super(props);
-        this.dep_ref = React.createRef();
     }
 
     render() {
         return (
-            <FeatureGroup ref={this.dep_ref} pathOptions={greenOptions}>
-                <GeoJSON data={this.props.datas} eventHandlers={{
+            <FeatureGroup ref={this.props.depRef} pathOptions={greenOptions}>
+                <GeoJSON data={this.props.datas} id={this.props.id} eventHandlers={{
                     click: ()=>{
-                        this.props.selectDepartement(this.props.datas.properties.code, latinize(this.props.datas.properties.nom.toLowerCase()).replace("'","-"),this.dep_ref);
+                        this.props.selectDepartement(this.props.datas.properties.code, latinize(this.props.datas.properties.nom.toLowerCase()).replace(/['\s]/g,"-"));
                     }
                 }}></GeoJSON>
             </FeatureGroup>

@@ -1,49 +1,84 @@
 import React from "react"
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
-import '../styles/locationInput.css';
+import StyledTextField from "./inputs/StyledTextField";
 
-import ardennes from "../assets/départements/ardennes.png";
-import belfort from "../assets/départements/belfort.png";
-import charente from "../assets/départements/charente-maritime.png";
-import hautesPy from "../assets/départements/hautes pyrenees.png";
-import orne from "../assets/départements/orne.png";
-import vendee from "../assets/départements/vendee.png";
+class LocationInput extends React.Component {
+    constructor(props){
+        super(props);
+        this.state={
+            locations : [
+            ],
+            input_error : false
+        }
+    }
 
-export default function LocationInput() {
-    const locations = [{code:'ARD', label:"Ardennes", src:ardennes},
-        {code:'BEL', label:"Belfort", src:belfort},
-        {code:'CHA', label:"Charente-Maritime", src:charente},
-        {code:'HPY', label:"Hautes Pyrenées", src:hautesPy},
-        {code:'ORN', label:"Orne", src:orne},
-        {code:'VEN', label:"Vendée", src:vendee}]
+    handlerChange(e){
+        let error = true;
+        let attr = ""
+        if(/^[0-9][ab]?[0-9]*$/i.test(e.target.value)){
+            //faire la requête à clément
+            attr = "code";
+            error = false;
+        }else if(/^[a-z]+$/i.test(e.target.value)){
+            //faire la requête à clément
+            attr = "nom";
+            error = false;
+        }
+        if(attr != ""){
+            fetch("http://localhost:8000/geography/search/communes",{
+                "method" : "POST",
+                "headers" : {
+                    "content-type" : "application/json"
+                },
+                body:JSON.stringify({
+                    "attr": attr,
+                    "query" : e.target.value
+                })
+            })
+            .then(data=>data.json())
+            .then(communes=>{
+                this.setState({input_error : error, locations : communes});
+            });
+        }
+    }
 
-    return (
-        <Autocomplete
-            id="location_selector"
-            sx={{ width: 300 }}
-            options={locations}
-            autoHighlight
-            getOptionLabel={(option) => option.label}
-            renderOption={(props, option) => (
-                <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                    <img src={option.src}
-                         loading="lazy"
-                         width="20"
-                         alt=""/>
-                    {option.label} ({option.code})
-                </Box>
-            )}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    label="Choose a location"
-                    inputProps={{
-                        ...params.inputProps,
-                    }}
-                />
-            )}
-        />
-    );
+    handlerValidate(e, value){
+        this.props.handler(value.code, value.nom, value.dep);
+    }
+
+    render(){
+        return (
+            <Autocomplete
+                id="location_selector"
+                sx={{ width: 300 }}
+                options={this.state.locations}
+                autoHighlight
+                filterOptions={(options)=>options}
+                getOptionLabel={(option) => `${option.nom} - ${option.code}`}
+                renderOption={(props, option) => (
+                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 }, '&:hover':{color :"#5B8D44"} }} {...props}>
+                        {`${option.nom} - ${option.code}`}
+                    </Box>
+                )}
+                onChange={this.handlerValidate.bind(this)}
+                renderInput={(params) => (
+                    <StyledTextField
+                        {...params}
+                        error={this.state.input_error}
+                        label="Choose a location"
+                        inputProps={{
+                            ...params.inputProps,
+                        }}
+                        helperText={this.state.input_error ? "Not a valid name or postcode" : ""}
+                        onChange={this.handlerChange.bind(this)}
+                    />
+                )}
+            />
+        );
+    }
 }
+
+
+
+export default LocationInput;

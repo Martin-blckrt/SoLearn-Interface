@@ -12,19 +12,7 @@ import Fab from '@mui/material/Fab';
 import RightIcon from '@mui/icons-material/KeyboardArrowRight';
 import {Link} from "react-router-dom";
 
-export default function AdvancedSearch() {
-
-    const [params, setParams] = useState({
-        location: '',
-        number: 1
-    })
-
-    const handleNumberUpdate = event => {
-        setParams(prevState => {
-            return {...prevState, number: event.target.value}
-        })
-    }
-
+export default function AdvancedSearch(props) {
     return (
         <div>
             <Accordion sx={{ boxShadow:"None" }} className="advanced_dropdown">
@@ -37,8 +25,8 @@ export default function AdvancedSearch() {
                 </AccordionSummary>
                 <AccordionDetails className="ac_details">
                     <div className="advanced_container">
-                        <LocationInput/>
-                        <NumberInput className="number" onChange={handleNumberUpdate}/>
+                        <LocationInput handler={props.chooseAdvanced}/>
+                        <NumberInput className="number"/>
                         <Link to="/results">
                             <Box className="predict_button">
                                 <Fab sx={{
