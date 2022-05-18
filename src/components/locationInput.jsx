@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Autocomplete from '@mui/material/Autocomplete';
 import StyledTextField from "./inputs/StyledTextField";
 import latinize from "latinize";
+import { getCommunesFromNameOrCode } from "./misc/requests";
 
 class LocationInput extends React.Component {
     constructor(props){
@@ -14,7 +15,7 @@ class LocationInput extends React.Component {
         }
     }
 
-    handlerChange(e){
+    async handlerChange(e){
         let error = true;
         let attr = ""
         if(/^[0-9][ab]?[0-9]*$/i.test(e.target.value)){
@@ -27,20 +28,8 @@ class LocationInput extends React.Component {
             error = false;
         }
         if(attr != ""){
-            fetch("http://localhost:8000/geography/search/communes",{
-                "method" : "POST",
-                "headers" : {
-                    "content-type" : "application/json"
-                },
-                body:JSON.stringify({
-                    "attr": attr,
-                    "query" : e.target.value
-                })
-            })
-            .then(data=>data.json())
-            .then(communes=>{
-                this.setState({input_error : error, locations : communes});
-            });
+            const communes = await getCommunesFromNameOrCode(attr, e.target.value);
+            this.setState({input_error : error, locations : communes});
         }
     }
 

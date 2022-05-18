@@ -4,6 +4,7 @@ import "leaflet/dist/leaflet.css";
 import Departement from './Departement';
 import Commune from './Commune';
 import '../../styles/Map.css';
+import {getAllDepartements, getAllCommunesOfDepartement, getCityFromCommune, getCoordsFromCode, getMeteoFromCoords} from '../misc/requests';
 
 const blueOptions = { color: '#081b78', fillColor: '#081b78'};
 const greenOptions = { color: '#087020', fillColor: '#087020' };
@@ -26,21 +27,12 @@ class Map extends React.Component {
         this.com_refs = {};
       }
 
-    componentDidMount() {
-        fetch("http://localhost:8000/geography/departements/all",{
-            "method" : "GET",
-            "headers" : {
-                "content-type" : "application/json"
-            }
-        })
-        .then(data=>data.json())
-        .then(geojson=>{
-            const parsed = JSON.parse(geojson);
-            parsed.forEach((data)=>{
-                this.dep_refs[data.properties.code] = React.createRef();
-            });
-            this.setState({departements : parsed});
+    async componentDidMount() {
+        const deps = await getAllDepartements();
+        deps.forEach((dep)=>{
+            this.dep_refs[dep.properties.code] = React.createRef();
         });
+        this.setState({departements : deps});
     }
 
     handlerTimeout(map){
@@ -60,27 +52,15 @@ class Map extends React.Component {
         }
       }
 
-    selectDepartement(code, name){
-        console.log(code, name);
-        fetch("http://localhost:8000/geography/departements/communes/all",{
-            "method" : "POST",
-            "headers" : {
-                "content-type" : "application/json"
-            },
-            body:JSON.stringify({
-                "dep": `${code}-${name}`
-            })
-        })
-        .then(data=>data.json())
-        .then(geojson=>{
-            geojson.features.forEach((data)=>{
-                this.com_refs[data.properties.code] = React.createRef();
-            });
-            this.setState({selected_code: code, communes : geojson.features, dep_ref:this.dep_refs[code].current});
+    async selectDepartement(code, name){
+        const communes = await getAllCommunesOfDepartement(code, name);
+        communes.features.forEach((commune)=>{
+            this.com_refs[commune.properties.code] = React.createRef();
         });
+        this.setState({selected_code: code, communes : communes.features, dep_ref:this.dep_refs[code].current});
     }
 
-    selectCommune(code_commune){
+    async selectCommune(code_commune){
         if(this.state.com_ref != null){
             this.state.com_ref.setStyle(greenOptions);
         }
@@ -88,50 +68,15 @@ class Map extends React.Component {
         const com_ref = this.com_refs[code_commune].current;
         com_ref.setStyle(blueOptions);
         com_ref.bringToFront();
-        this.getCityFromCommune(code_commune);
+        await this.getDatas(code_commune);
         this.setState({com_ref:com_ref});
     }
 
-    getCityFromCommune(code){
-        fetch(`https://geo.api.gouv.fr/communes/${code}?fields=codesPostaux&format=json&geometry=centre`,{
-            "method" : "GET",
-            "headers" : {
-                "content-type" : "application/json"
-            }
-        })
-        .then(data=>data.json())
-        .then(res=>{
-            this.getCoordsFromCode(res.codesPostaux[0]);
-        });
-        
-    }
-
-    getCoordsFromCode(code){
-        fetch(`http://api.openweathermap.org/geo/1.0/zip?zip=${code},FR&appid=fe4219bc43e2fefcdcf1528cadca3ddd`,{
-            "method" : "GET",
-            "headers" : {
-                "content-type" : "application/json"
-            }
-        })
-        .then(data=>data.json())
-        .then(res=>{
-            console.log(res.lat, res.lon);
-            this.getMeteoFromCoords(res.lat, res.lon);
-        });
-    }
-
-    getMeteoFromCoords(lat, lon){
-        console.log(lat, lon);
-        fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,daily,alerts&appid=49afb958f2e6418e3e582687eeda45b4`,{
-            "method" : "GET",
-            "headers" : {
-                "content-type" : "application/json"
-            }
-        })
-        .then(data=>data.json())
-        .then(res=>{
-            console.log(res);
-        });
+    async getDatas(code){
+        const city = await getCityFromCommune(code);
+        const coords = await getCoordsFromCode(city.codesPostaux[0]);
+        const meteo = await getMeteoFromCoords(coords.lat, coords.lon);
+        console.log(meteo);
     }
 
     handlerZoomEnd(e){
