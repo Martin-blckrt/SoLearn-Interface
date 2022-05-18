@@ -2,6 +2,7 @@ import React from "react"
 import Box from '@mui/material/Box';
 import Autocomplete from '@mui/material/Autocomplete';
 import StyledTextField from "./inputs/StyledTextField";
+import latinize from "latinize";
 
 class LocationInput extends React.Component {
     constructor(props){
@@ -20,7 +21,7 @@ class LocationInput extends React.Component {
             //faire la requête à clément
             attr = "code";
             error = false;
-        }else if(/^[a-z]+$/i.test(e.target.value)){
+        }else if(/^[a-z\s'-]+$/i.test(latinize(e.target.value))){
             //faire la requête à clément
             attr = "nom";
             error = false;
