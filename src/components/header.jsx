@@ -18,13 +18,15 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {Logout} from "@mui/icons-material";
 import {logout, handleLogin, isLoggedIn} from "../utils/auth";
 import TextField from "@mui/material/TextField";
+import DialogBoxLogin from "./dialog_box/DialogBoxLogin";
+import DialogBoxRegister from "./dialog_box/DialogBoxRegister";
 
 export default function Header() {
 
     const [credentials, setCredentials] = useState({
         username: '',
         password: ''
-    })
+    });
 
     const handleUpdate = event => {
         setCredentials(prevState => {
@@ -150,51 +152,12 @@ export default function Header() {
                     </div>
                 ) : (
                     <div className="notPremiumContainer">
-                        <div className="aboutContainer" onClick={handleClickOpenLogin}>
-                            Login
-                        </div>
-                        <Dialog open={openLogin} onClose={handleCloseLogin}>
-                            <DialogTitle>Login to your account</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    Enter your credentials to login and get your premium advantages.
-                                </DialogContentText>
-                                <TextField  autoFocus
-                                            required
-                                            margin="dense"
-                                            id="username"
-                                            label="Username"
-                                            name="username"
-                                            type="text"
-                                            fullWidth
-                                            variant="outlined"
-                                            onChange={handleUpdate}/>
-                                <TextField  autoFocus
-                                            required
-                                            margin="dense"
-                                            id="password"
-                                            label="Password"
-                                            name="password"
-                                            type="password"
-                                            fullWidth
-                                            variant="outlined"
-                                            onChange={handleUpdate}/>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button sx={{"color": "#5b8d44"}} onClick={handleCloseLogin}>Cancel</Button>
-                                <Button sx={{"color": "#5b8d44"}} onClick={event => {handleSubmit(event)}}>
-                                    Login</Button>
-                            </DialogActions>
-                            <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
-                                <Alert onClose={handleCloseSnack} severity="error" sx={{ width: '100%' }}>
-                                    Invalid username/password !
-                                </Alert>
-                            </Snackbar>
-                        </Dialog>
+                        <DialogBoxLogin></DialogBoxLogin>
+                        <DialogBoxRegister></DialogBoxRegister>
                         <div className="premiumContainer" onClick={handleClickOpen}>
                             Get premium
                         </div>
-                        <Dialog open={open} onClose={handleClose}>
+                        {/* <Dialog open={open} onClose={handleClose}>
                             <DialogTitle>Get Premium</DialogTitle>
                             <DialogContent>
                                 <DialogContentText>
@@ -238,7 +201,7 @@ export default function Header() {
                                     Created account successfully !
                                 </Alert>
                             </Snackbar>
-                        </Dialog>
+                        </Dialog> */}
                     </div>
                 )}
             </div>
