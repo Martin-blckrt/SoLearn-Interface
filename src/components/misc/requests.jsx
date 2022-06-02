@@ -124,13 +124,13 @@ export async function loginUser(email, pwd){
 }
 
 export async function verifAccountRequest(verif_token){
-    const datas = await fetch("http://localhost:8000/accounts/verification", {
+    const datas = await fetch("http://localhost:8000/accounts/confirmation", {
         "method" : "POST",
         "headers":{
             "content-type" : "application/json"
         },
         body : JSON.stringify({
-            "" : verif_token,
+            "token" : verif_token,
         })
     });
     const token = await datas.json();
