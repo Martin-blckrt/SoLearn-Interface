@@ -149,7 +149,7 @@ class DialogBoxRegister extends React.Component{
     render(){
         return(
             <div>
-                <div className="registerContainer" onClick={openDialog.bind(this)}>
+                <div className="aboutContainer" onClick={openDialog.bind(this)}>
                     Register
                 </div>
                 <Dialog open={this.state.open_dialog} onClose={this.handleCloseDialog} fullWidth>

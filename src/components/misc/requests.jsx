@@ -107,3 +107,32 @@ export async function registerUser(email, pwd, pwd_verif){
     const email_user = await datas.json();
     return email_user; 
 }
+
+export async function loginUser(email, pwd){
+    const datas = await fetch("http://localhost:8000/accounts/login", {
+        "method" : "POST",
+        "headers":{
+            "content-type" : "application/json"
+        },
+        body : JSON.stringify({
+            "email" : email,
+            "password" : pwd
+        })
+    });
+    const token = await datas.json();
+    return token;
+}
+
+export async function verifAccountRequest(verif_token){
+    const datas = await fetch("http://localhost:8000/accounts/verification", {
+        "method" : "POST",
+        "headers":{
+            "content-type" : "application/json"
+        },
+        body : JSON.stringify({
+            "" : verif_token,
+        })
+    });
+    const token = await datas.json();
+    return token;
+}

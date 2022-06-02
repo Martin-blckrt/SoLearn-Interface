@@ -2,11 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import HomePage from './pages/HomePage';
+import MapPage from './pages/MapPage';
 import ResultsPage from './pages/ResultsPage';
 import AboutPage from "./pages/AboutPage";
 import Header from "./components/header"
 import reportWebVitals from './utils/reportWebVitals';
 import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import VerificationPage from './pages/VerificationPage';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -15,8 +17,10 @@ root.render(
         <Router>
             <Routes>
                 <Route exact path="/" element={<HomePage/>}/>
+                <Route exact path="/map" element={<MapPage/>}/>
                 <Route path="/results" element={<ResultsPage/>}/>
                 <Route exact path="/about" element={<AboutPage/>}/>
+                <Route path="/verification/:token" element={<VerificationPage/>}/>
                 <Route
                     path="*"
                     element={

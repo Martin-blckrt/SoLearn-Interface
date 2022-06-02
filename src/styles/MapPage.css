@@ -1,0 +1,16 @@
+.horizontalMapContainer {
+  display: flex;
+  flex-direction: row;
+}
+
+.leftMapContainer {
+  display: flex;
+  flex-direction: column;
+  margin-left: 50px;
+}
+
+.rightMapContainer {
+  display: flex;
+  flex-direction: row;
+  padding: 20px 0 0 30px;
+}

@@ -1,7 +1,7 @@
 import React from "react"
-import '../styles/homeTitle.css';
+import '../styles/mapTitle.css';
 
-export default function HomeTitle() {
+export default function MapTitle() {
     return (
         <div className="bigContainer">
             <p className="bigMessage">
