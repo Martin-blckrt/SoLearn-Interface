@@ -8,18 +8,16 @@ import { verifAccountRequest } from "../components/misc/requests";
 
 const VerificationPage = (props) => {
 
-    let {verif_token} = useParams();
+    const verif_token = window.location.pathname.split("/")[2];
     let navigate = useNavigate();
+    verifAccount();
     
     const verifAccount = async () =>{
         const account_token = await verifAccountRequest(verif_token);
-        sessionStorage.setItem("account_token", account_token);
-        setTimeout(()=>{
-            navigate("../home", {replace : true});
-        }, 2000);
+        sessionStorage.setItem("account_token", account_token.access);
+        navigate("../home", {replace : true});
     }
 
-    verifAccount();
 
     return(
         <div>
