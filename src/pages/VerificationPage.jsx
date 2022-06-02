@@ -10,15 +10,17 @@ const VerificationPage = (props) => {
 
     const verif_token = window.location.pathname.split("/")[2];
     let navigate = useNavigate();
-    verifAccount();
     
     const verifAccount = async () =>{
         const account_token = await verifAccountRequest(verif_token);
         sessionStorage.setItem("access_token", account_token.access);
         sessionStorage.setItem("refresh_token", account_token.refresh);
-        navigate("../home", {replace : true});
+        setTimeout(()=>{
+            navigate("../home", {replace : true});
+        }, 2000);
     }
-
+    
+    verifAccount();
 
     return(
         <div>
