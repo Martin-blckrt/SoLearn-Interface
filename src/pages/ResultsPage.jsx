@@ -7,15 +7,50 @@ import React, {useEffect, useState} from "react";
 import Graph from "../assets/graph.png";
 import SolarPanelGif from "../assets/solar panel.gif";
 import {FileDownloadOutlined} from "@mui/icons-material";
+import Chart from 'chart.js/auto';
 
 function ResultsPage(props) {
+    let myChart = null;
     const [isShown, setIsShown] = useState(false);
     useEffect(() => {
         setTimeout(() => {
             setIsShown(true);
         }, 3000);
+        if (myChart !== null)
+            myChart.destroy();
+        myChart = new Chart(document.getElementById('myChart').getContext('2d'), config);
     }, []);
-    console.log(props.location)
+
+
+    const labels = [
+        'January',
+        'February',
+        'March',
+        'April',
+        'May',
+        'June',
+        'July',
+        'August',
+        'September',
+        'October',
+        'November',
+        'December'
+    ];
+
+    const data = {
+        labels: labels,
+        datasets: [{backgroundColor: 'rgb(255, 99, 132)',
+            borderColor: 'rgb(255, 99, 132)',
+            data: [0, 10, 5, 2, 20, 30, 45],
+        }]
+    };
+
+    const config = {
+        type: 'line',
+        data: data,
+        options: {}
+    };
+
     if (isShown) {
         return (
             <div>
@@ -26,11 +61,11 @@ function ResultsPage(props) {
                             Estimated Production for <a className="locationTitle">Here</a>
                         </div>
                         <div className="graphContainer">
-                            <img className="graphImg" src={Graph} alt="graph" />
+                            <canvas id="myChart"></canvas>
                         </div>
                         <div className="downloadContainer">
                             <FileDownloadOutlined sx={{ marginRight: "4px"}}/>
-                            Download the data as a csv file
+                            Download the data as a json file
                         </div>
                     </div>
                     <div className="rightResultsContainer">
