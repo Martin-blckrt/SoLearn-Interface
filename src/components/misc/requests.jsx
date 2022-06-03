@@ -92,7 +92,7 @@ export async function getCommunesFromNameOrCode(attr, query){
     return communes; 
 }
 
-export async function registerUser(email, pwd, pwd_verif){
+export async function registerUser(email, pwd){
     const datas = await fetch("http://localhost:8000/accounts/register",{
         "method" : "POST",
         "headers" : {
@@ -100,12 +100,12 @@ export async function registerUser(email, pwd, pwd_verif){
         },
         body:JSON.stringify({
             "email": email,
-            "password" : pwd,
-            "password2" : pwd_verif
+            "password" : pwd
         })
-    });  
+    });
     const email_user = await datas.json();
-    return email_user; 
+    console.log(email_user);
+    return {email_user, status : datas.status}; 
 }
 
 export async function loginUser(email, pwd){

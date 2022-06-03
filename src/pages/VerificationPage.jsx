@@ -1,6 +1,5 @@
 import React from "react";
 import Header from "../components/header";
-import { useParams } from "react-router";
 import { useNavigate } from "react-router-dom";
 import SolarPanelGif from "../assets/solar panel.gif";
 import { Box, Typography } from "@mui/material";

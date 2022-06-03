@@ -131,19 +131,25 @@ class DialogBoxRegister extends React.Component{
     async handleSubmit(){
         let snackbar_text = "Created account successfully !";
         let snackbar_color = "success";
+        const errors_state = this.state.errors;
         if(checkErrors(this.state.errors)){
             if(this.state.errors.email){
                 snackbar_text = "Invalid email field";
-            }else if(this.state.errors.pwd){
+            }else if(this.state.errors.pwd.error_mix_n_l || this.state.errors.pwd.error_mix_u_l_chars || this.state.errors.pwd.error_nb_chars || this.state.errors.pwd.error_spec_char){
                 snackbar_text = "Invalid password field";
             }else{
                 snackbar_text = "Passwords are not identical";
             }
             snackbar_color = "error";
         }else{
-            await registerUser(this.state.email, this.state.pwd, this.state.pwd_verif);
+            const errors = await registerUser(this.state.email, this.state.pwd);
+            if(errors.status != "201"){
+                snackbar_text =  errors.email_user.email[0];
+                snackbar_color = "error";
+                errors_state.email = true;
+            }
         }
-        this.setState({snackbar_text : snackbar_text, snackbar_color : snackbar_color, open_snack : true});
+        this.setState({snackbar_text : snackbar_text, snackbar_color : snackbar_color, open_snack : true, errors : errors_state});
     }
 
     render(){
@@ -152,7 +158,7 @@ class DialogBoxRegister extends React.Component{
                 <div className="aboutContainer" onClick={openDialog.bind(this)}>
                     Register
                 </div>
-                <Dialog open={this.state.open_dialog} onClose={this.handleCloseDialog} fullWidth>
+                <Dialog open={this.state.open_dialog} onClose={this.handleCloseDialog.bind(this)} fullWidth>
                     <DialogTitle>Register</DialogTitle>
                     <DialogContent>
                         <DialogContentText>
@@ -172,6 +178,7 @@ class DialogBoxRegister extends React.Component{
                                     error={this.state.errors.email}
                                     helperText={this.state.helper_texts.email}
                                     onChange={handleEmailChange.bind(this)}
+                                    className={!this.state.errors.email && this.state.email != "" ? "valid" : ""}
                                     />
                         <ValidationTextField 
                                     required
@@ -186,6 +193,7 @@ class DialogBoxRegister extends React.Component{
                                     onFocus={this.handleFocusPwd.bind(this)}
                                     onBlur={this.handleBlurPwd.bind(this)}
                                     error={(this.state.errors.pwd.error_mix_n_l || this.state.errors.pwd.error_mix_u_l_chars || this.state.errors.pwd.error_nb_chars || this.state.errors.pwd.error_spec_char) && this.state.pwd != ""}
+                                    className={!this.state.errors.pwd.error_mix_n_l && !this.state.errors.pwd.error_mix_u_l_chars && !this.state.errors.pwd.error_nb_chars && !this.state.errors.pwd.error_spec_char && this.state.pwd != "" ? "valid" : ""}
                                     />
                         <InfosPwd open={this.state.open_infos} anchorEl={this.state.anchorEl} errors={this.state.errors.pwd}></InfosPwd>
                         <ValidationTextField 
@@ -199,6 +207,7 @@ class DialogBoxRegister extends React.Component{
                                     variant="outlined"
                                     error={this.state.errors.verif}
                                     onChange={this.handleVerifPwd.bind(this)}
+                                    className={!this.state.errors.verif && this.state.pwd_verif != "" ? "valid" : ""}
                                 />
                     </DialogContent>
                     <DialogActions>

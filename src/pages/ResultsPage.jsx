@@ -7,7 +7,17 @@ import React, {useEffect, useState} from "react";
 import Graph from "../assets/graph.png";
 import SolarPanelGif from "../assets/solar panel.gif";
 import {FileDownloadOutlined} from "@mui/icons-material";
-import Chart from 'chart.js/auto';
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+  } from 'chart.js';
+  import { Line } from 'react-chartjs-2';
 
 function ResultsPage(props) {
     let myChart = null;
@@ -16,13 +26,35 @@ function ResultsPage(props) {
         setTimeout(() => {
             setIsShown(true);
         }, 3000);
-        if (myChart !== null)
-            myChart.destroy();
-        myChart = new Chart(document.getElementById('myChart').getContext('2d'), config);
+        // if (myChart !== null)
+        //     myChart.destroy();
+        // myChart = new Chart(document.getElementById('myChart').getContext('2d'), config);
     }, []);
 
+    ChartJS.register(
+        CategoryScale,
+        LinearScale,
+        PointElement,
+        LineElement,
+        Title,
+        Tooltip,
+        Legend
+      );
 
-    const labels = [
+      const options = {
+        responsive: true,
+        plugins: {
+          legend: {
+            position: 'top' ,
+          },
+          title: {
+            display: true,
+            text: 'Chart.js Line Chart',
+          },
+        },
+      };
+
+      const labels = [
         'January',
         'February',
         'March',
@@ -55,6 +87,7 @@ function ResultsPage(props) {
         return (
             <div>
                 <Header/>
+                <Line options={options} data={data} />
                 <div className="pageResultsContainer">
                     <div className="leftResultsContainer">
                         <div className="resultsTitle">
