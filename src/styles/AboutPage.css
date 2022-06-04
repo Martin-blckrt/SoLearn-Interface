@@ -1,9 +1,123 @@
 .bigAboutContainer {
     display: flex;
-    margin-top: 20px;
+    margin: 10px 120px 0 120px;
+    flex-direction: column;
+    align-items: center;
+    align-content: center;
+    justify-content: space-around;
+    gap: 90px;
 }
 
-.videoHolder {
-    width: 50%;
-    height: 50%;
+.bigTitle {
+    text-align: center;
+    color: #005403;
+    width: 52%;
+    font-size: 17px;
+    line-height: 28px;
+}
+
+.secondLayerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.secondLayerLeft {
+    color: #005403;
+    line-height: 28px;
+    flex: 50vh;
+    padding :0 100px 0 100px;
+}
+
+.secondLayerRight {
+    flex: 60vh;
+}
+
+.thirdLayerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.thirdLayerLeft {
+    flex: 60vh;
+    padding-left: 100px;
+    padding-right: 30px;
+}
+
+.thirdLayerRight {
+    color: #005403;
+    line-height: 28px;
+    flex: 50vh;
+    padding :0 0 0 100px;
+}
+
+.intermediateMsg {
+    text-align: center;
+    color: #0BDA51;
+    font-size: 28px;
+    font-weight: 500;
+    line-height: 40px;
+}
+
+.fourthLayerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.fourthLayerLeft {
+    color: #005403;
+    line-height: 28px;
+    flex: 50vh;
+    padding :0 100px 0 100px;
+}
+
+.fourthLayerRight {
+    flex: 60vh;
+}
+
+.fifthLayerContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.fifthLayerLeft {
+    flex: 60vh;
+    padding-left: 100px;
+    padding-right: 30px;
+}
+
+.fifthLayerRight {
+    color: #005403;
+    line-height: 28px;
+    flex: 50vh;
+    padding :0 0 0 100px;
+}
+
+.custom-shape-divider-bottom-1654341115 {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    overflow: hidden;
+    line-height: 0;
+    transform: rotate(180deg);
+}
+
+.custom-shape-divider-bottom-1654341115 svg {
+    position: relative;
+    display: block;
+    width: calc(110% + 1.3px);
+    height: 118px;
+    transform: rotateY(180deg);
+}
+
+.custom-shape-divider-bottom-1654341115 .shape-fill {
+    fill: #52A6CE;
 }
