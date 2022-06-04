@@ -7,6 +7,7 @@ import React, {useEffect, useState} from "react";
 import Graph from "../assets/graph.png";
 import SolarPanelGif from "../assets/solar panel.gif";
 import {FileDownloadOutlined} from "@mui/icons-material";
+import FinancialEstimate from "../components/financialEstimate";
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -20,15 +21,11 @@ import {
   import { Line } from 'react-chartjs-2';
 
 function ResultsPage(props) {
-    let myChart = null;
     const [isShown, setIsShown] = useState(false);
     useEffect(() => {
         setTimeout(() => {
             setIsShown(true);
         }, 3000);
-        // if (myChart !== null)
-        //     myChart.destroy();
-        // myChart = new Chart(document.getElementById('myChart').getContext('2d'), config);
     }, []);
 
     ChartJS.register(
@@ -45,10 +42,11 @@ function ResultsPage(props) {
         responsive: true,
         plugins: {
           legend: {
+            display: false,
             position: 'top' ,
           },
           title: {
-            display: true,
+            display: false,
             text: 'Chart.js Line Chart',
           },
         },
@@ -71,8 +69,8 @@ function ResultsPage(props) {
 
     const data = {
         labels: labels,
-        datasets: [{backgroundColor: 'rgb(255, 99, 132)',
-            borderColor: 'rgb(255, 99, 132)',
+        datasets: [{backgroundColor: '#005403',
+            borderColor: '#5b8d44',
             data: [0, 10, 5, 2, 20, 30, 45],
         }]
     };
@@ -87,14 +85,13 @@ function ResultsPage(props) {
         return (
             <div>
                 <Header/>
-                <Line options={options} data={data} />
                 <div className="pageResultsContainer">
                     <div className="leftResultsContainer">
                         <div className="resultsTitle">
                             Estimated Production for <a className="locationTitle">Here</a>
                         </div>
                         <div className="graphContainer">
-                            <canvas id="myChart"></canvas>
+                            <Line options={options} data={data} />
                         </div>
                         <div className="downloadContainer">
                             <FileDownloadOutlined sx={{ marginRight: "4px"}}/>
@@ -102,8 +99,11 @@ function ResultsPage(props) {
                         </div>
                     </div>
                     <div className="rightResultsContainer">
-                        <div className="financialContainer">
+                        <div className="resultsTitle">
                             Financial Estimate
+                        </div>
+                        <div className="financialContainer">
+                            <FinancialEstimate/>
                         </div>
                     </div>
                 </div>

@@ -1,0 +1,9 @@
+.bigAboutContainer {
+    display: flex;
+    margin-top: 20px;
+}
+
+.videoHolder {
+    width: 50%;
+    height: 50%;
+}
