@@ -1,0 +1,63 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-top: 90px;
+}
+
+.bigNumber {
+    font-size: 70px;
+    font-weight: 500;
+    color: #005403;
+    line-height: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.earned {
+    font-size: 15px;
+    color: #5b8d44;
+    font-weight: normal;
+}
+
+.financialInfo {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.extraFInfo {
+    font-size: 32px;
+    font-weight: 400;
+    color: #005403;
+    line-height: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.extraFinancial {
+    font-size: 15px;
+    color: #5b8d44;
+    font-weight: normal;
+}
+
+.notPremiumMessage {
+    font-size: 22px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 30px;
+    gap: 70px;
+    align-items: center;
+    text-align: center;
+}
+
+.numbersImg {
+    filter: blur(10px);
+        color: #005403;
+}
