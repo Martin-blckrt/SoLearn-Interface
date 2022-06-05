@@ -1,10 +1,10 @@
 import React, {useState} from "react"
 import '../styles/financialEstimate.css';
 import numbers from "../assets/numbers_blur.png";
+import {isLoggedIn} from "../utils/auth";
 
 export default function FinancialEstimate(props) {
-    const premiumUser = false; //fake
-    if (premiumUser) {
+    if (isLoggedIn()) {
         return (
             <div className="container">
                 <div className="bigNumber">

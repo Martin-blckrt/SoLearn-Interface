@@ -20,6 +20,7 @@ import {logout, handleLogin, isLoggedIn} from "../utils/auth";
 import TextField from "@mui/material/TextField";
 import DialogBoxLogin from "./dialog_box/DialogBoxLogin";
 import DialogBoxRegister from "./dialog_box/DialogBoxRegister";
+import DialogBoxPremium from "./dialog_box/DialogBoxPremium";
 
 export default function Header() {
 
@@ -86,7 +87,7 @@ export default function Header() {
                 <div className="logoContainer">
                     <img className="logoImg" src={logo} alt="logo" />
                     <div className="logoText">
-                        Solar <br/> Predictor
+                        SoLearn
                     </div>
                 </div>
             </a>
@@ -154,9 +155,7 @@ export default function Header() {
                     <div className="notPremiumContainer">
                         <DialogBoxLogin></DialogBoxLogin>
                         <DialogBoxRegister></DialogBoxRegister>
-                        <div className="premiumContainer" onClick={handleClickOpen}>
-                            Get premium
-                        </div>
+                        <DialogBoxPremium></DialogBoxPremium>
                         {/* <Dialog open={open} onClose={handleClose}>
                             <DialogTitle>Get Premium</DialogTitle>
                             <DialogContent>

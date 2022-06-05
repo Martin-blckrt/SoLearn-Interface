@@ -65,6 +65,7 @@ class DialogBoxLogin extends React.Component{
                                             type="text"
                                             fullWidth
                                             variant="outlined"
+                                            color="success"
                                             onChange={(e)=>this.handleUpdateEmail(e.target.value)}/>
                                 <TextField  autoFocus
                                             required
@@ -75,6 +76,7 @@ class DialogBoxLogin extends React.Component{
                                             type="password"
                                             fullWidth
                                             variant="outlined"
+                                            color="success"
                                             onChange={(e)=>this.handleUpdatePwd(e.target.value)}/>
                             </DialogContent>
                         <DialogActions>

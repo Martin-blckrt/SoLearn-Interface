@@ -7,8 +7,9 @@ import ResultsPage from './pages/ResultsPage';
 import AboutPage from "./pages/AboutPage";
 import Header from "./components/header"
 import reportWebVitals from './utils/reportWebVitals';
-import {BrowserRouter as Router, Route, Routes} from "react-router-dom";
+import {BrowserRouter as Router, Route, Routes, Navigate} from "react-router-dom";
 import VerificationPage from './pages/VerificationPage';
+import {isLoggedIn} from "./utils/auth";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -16,7 +17,8 @@ root.render(
     <React.StrictMode>
         <Router>
             <Routes>
-                <Route exact path="/" element={<HomePage/>}/>
+                <Route exact path="/"
+                       element={isLoggedIn() ? (<Navigate replace to="/map"/>) : (<Navigate replace to="/about"/>)}/>
                 <Route exact path="/map" element={<MapPage/>}/>
                 <Route path="/results" element={<ResultsPage/>}/>
                 <Route exact path="/about" element={<AboutPage/>}/>
