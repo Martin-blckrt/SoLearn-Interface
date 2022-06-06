@@ -6,11 +6,12 @@ import rsIMG from '../assets/rising_seas.jpg'
 import Header from "../components/header";
 import {Button} from "@mui/material";
 import DoubleArrowIcon from '@mui/icons-material/DoubleArrow';
+import DialogBoxRegister from "../components/dialog_box/DialogBoxRegister";
 
 function AboutPage() {
     return (
         <div style={{position: 'relative', paddingBottom: '200px'}}>
-            <Header/>
+            <Header aboutLoc={true}/>
             <div className="bigAboutContainer">
                 <div className="bigTitle">
                     <p style={{fontWeight: 500, fontSize: '40px', marginBottom: '30px'}}>Our Project</p>
@@ -75,10 +76,7 @@ function AboutPage() {
                     Want to support our cause and project ?<br></br>
                     It's easy : just create an account !
                 </div>
-                <Button id="regButton" variant="contained" endIcon={<DoubleArrowIcon />} color="success"
-                        sx={{color: 'white', backgroundColor: '#0BDA51', height: '50px', width: '150px', marginTop: '-50px'}}>
-                    Register
-                </Button>
+                <DialogBoxRegister openedFrom={"aboutPage"}/>
             </div>
             <div className="custom-shape-divider-bottom-1654341115">
                 <svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 120"

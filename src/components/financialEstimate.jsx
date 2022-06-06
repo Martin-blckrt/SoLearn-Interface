@@ -2,6 +2,7 @@ import React, {useState} from "react"
 import '../styles/financialEstimate.css';
 import numbers from "../assets/numbers_blur.png";
 import {isLoggedIn} from "../utils/auth";
+import DialogBoxPremium from "./dialog_box/DialogBoxPremium";
 
 export default function FinancialEstimate(props) {
     if (isLoggedIn()) {
@@ -24,7 +25,7 @@ export default function FinancialEstimate(props) {
         return (
             <div className="notPremiumMessage">
                 <img className="numbersImg" src={numbers} alt="numbers" />
-                Subscribe to <p style={{color: '#0BDA51', display: "contents", fontSize: '25px', fontWeight: '500'}}>premium</p> for more estimations and the financial estimate !
+                <DialogBoxPremium openedFrom={"financialEstimate"}/>
             </div>
         );
     }

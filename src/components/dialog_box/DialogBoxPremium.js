@@ -39,6 +39,7 @@ class DialogBoxLogin extends React.Component{
             issuer: '',
             focused: '',
             formData: null,
+            openedFrom: props.openedFrom,
         };
     }
 
@@ -83,8 +84,9 @@ class DialogBoxLogin extends React.Component{
     render(){
         return(
             <div>
-                <div className="premiumContainer" onClick={openDialog.bind(this)}
-                     style={{display: 'flex',
+                {this.state.openedFrom === 'header' ? (
+                    <div className="premiumContainer" onClick={openDialog.bind(this)}
+                         style={{display: 'flex',
                              alignItems: 'center',
                              justifyContent: 'center',
                              color: '#FFFFFF',
@@ -95,9 +97,17 @@ class DialogBoxLogin extends React.Component{
                              padding: '8px 15px',
                              height: '30px',
                              width: '120px'
-                     }}>
-                    Get premium
-                </div>
+                         }}>
+                        Get premium
+                    </div>
+                ) : (
+                    <div>
+                        Subscribe to
+                        <p style={{color: '#0BDA51', display: "contents", fontSize: '25px', fontWeight: '500', cursor: 'pointer'}}
+                           onClick={openDialog.bind(this)}> premium </p>
+                        for more estimations and the financial estimate !
+                    </div>
+                    )}
                 <Dialog open={this.state.open_dialog}>
                     <DialogTitle>Subscribe to premium</DialogTitle>
                         <DialogContent>
@@ -114,7 +124,8 @@ class DialogBoxLogin extends React.Component{
                                 focused={this.state.focused}
                                 callback={this.handleCallback}
                             />
-                            <form ref={c => (this.form = c)} onSubmit={this.handleSubmit}>
+                            <form ref={c => (this.form = c)} onSubmit={this.handleSubmit}
+                                  style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                                 <div className="form-group">
                                     <StyledTextField
                                         type="tel"

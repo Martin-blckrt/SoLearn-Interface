@@ -22,7 +22,7 @@ import DialogBoxLogin from "./dialog_box/DialogBoxLogin";
 import DialogBoxRegister from "./dialog_box/DialogBoxRegister";
 import DialogBoxPremium from "./dialog_box/DialogBoxPremium";
 
-export default function Header() {
+export default function Header(props) {
 
     const [credentials, setCredentials] = useState({
         username: '',
@@ -81,6 +81,8 @@ export default function Header() {
         setOpenSnack(false);
     };
 
+    const premiumUser = false;
+
     return (
         <div className="topContainer">
             <a href="/">
@@ -93,9 +95,15 @@ export default function Header() {
             </a>
             <div className="endContainer">
                 <Link to="/about">
-                    <div className="aboutContainer">
-                        About
-                    </div>
+                    {props.aboutLoc ? (
+                        <div className="aboutContainer" style={{fontWeight: 500}}>
+                            About
+                        </div>
+                    ) : (
+                        <div className="aboutContainer">
+                            About
+                        </div>
+                    )}
                 </Link>
                 {isLoggedIn() ? (
                     <div className="accountContainer">
@@ -150,12 +158,17 @@ export default function Header() {
                                 Logout
                             </MenuItem>
                         </Menu>
+                        {!premiumUser ? (
+                            <div className="notPremiumContainer">
+                                <DialogBoxPremium openedFrom={"header"}></DialogBoxPremium>
+                            </div>
+                        ) : (<div/>)}
                     </div>
                 ) : (
                     <div className="notPremiumContainer">
                         <DialogBoxLogin></DialogBoxLogin>
-                        <DialogBoxRegister></DialogBoxRegister>
-                        <DialogBoxPremium></DialogBoxPremium>
+                        <DialogBoxRegister openedFrom={"header"}></DialogBoxRegister>
+                        <DialogBoxPremium openedFrom={"header"}></DialogBoxPremium>
                         {/* <Dialog open={open} onClose={handleClose}>
                             <DialogTitle>Get Premium</DialogTitle>
                             <DialogContent>

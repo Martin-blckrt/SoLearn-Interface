@@ -14,6 +14,7 @@ import {openDialog, closeSnack, handleEmailChange, checkErrors} from "../../util
 import InfosPwd from "../infos/InfosPwd";
 import ValidationTextField from "../inputs/ValidationTextField";
 import { registerUser } from "../misc/requests";
+import DoubleArrowIcon from "@mui/icons-material/DoubleArrow";
 
 class DialogBoxRegister extends React.Component{
     constructor(props){
@@ -41,7 +42,8 @@ class DialogBoxRegister extends React.Component{
             },
             open_infos : false,
             snackbar_text : "",
-            snackbar_color : "success"
+            snackbar_color : "success",
+            openedFrom: props.openedFrom,
         };
     }
 
@@ -155,9 +157,17 @@ class DialogBoxRegister extends React.Component{
     render(){
         return(
             <div>
-                <div className="aboutContainer" onClick={openDialog.bind(this)}>
-                    Register
-                </div>
+                {this.state.openedFrom === 'header' ? (
+                    <div className="aboutContainer" onClick={openDialog.bind(this)}>
+                        Register
+                    </div>
+                ) : (
+                    <Button id="regButton" variant="contained" endIcon={<DoubleArrowIcon />} color="success"
+                            sx={{color: 'white', backgroundColor: '#0BDA51', height: '50px', width: '150px', marginTop: '-50px'}}
+                            onClick={openDialog.bind(this)}>
+                        Register
+                    </Button>
+                )}
                 <Dialog open={this.state.open_dialog} onClose={this.handleCloseDialog.bind(this)} fullWidth>
                     <DialogTitle>Register</DialogTitle>
                     <DialogContent>
