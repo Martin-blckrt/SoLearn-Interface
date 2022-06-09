@@ -8,11 +8,11 @@ import {
     DialogContentText,
     DialogTitle,
     Snackbar,
-    TextField
 } from "@mui/material";
 import {handleLogin, isLoggedIn} from "../../utils/auth";
 import {openDialog, closeDialog, openSnack, closeSnack} from "../../utils/handlers";
 import { loginUser } from "../misc/requests";
+import ValidationTextField from "../inputs/ValidationTextField";
 
 
 class DialogBoxLogin extends React.Component{
@@ -22,12 +22,13 @@ class DialogBoxLogin extends React.Component{
             open_dialog : false,
             open_snack : false,
             email : "",
-            pwd : ""
+            pwd : "",
+            error : false
         };
     }
 
     handleCloseLogin(e){
-        this.setState({email : "", pwd : ""});
+        this.setState({email : "", pwd : "", error : false, open_snack : false});
     }
 
     handleUpdateEmail(value){
@@ -39,8 +40,15 @@ class DialogBoxLogin extends React.Component{
     }
 
     async handleSubmit(){
-        const token = await loginUser(this.state.email, this.state.pwd);
-        console.log(token);
+        try{
+            const account_tokens = await loginUser(this.state.email, this.state.pwd);
+            localStorage.setItem("access_token", account_tokens.access);
+            localStorage.setItem("refresh_token", account_tokens.refresh);
+            this.props.refreshLogin(true);
+            this.setState({open_snack : false, error : false, open_dialog : false});
+        }catch{
+            this.setState({open_snack : true, error : true});
+        }
     }
 
     render(){
@@ -49,14 +57,13 @@ class DialogBoxLogin extends React.Component{
                 <div className="aboutContainer" onClick={openDialog.bind(this)}>
                     Login
                 </div>
-                <Dialog open={this.state.open_dialog} onClose={this.handleCloseLogin}>
+                <Dialog open={this.state.open_dialog} onClose={this.handleCloseLogin.bind(this)}>
                     <DialogTitle>Login to your account</DialogTitle>
-                    <form method="POST" action="http://localhost:8000/accounts/login">
                         <DialogContent>
                             <DialogContentText>
                                 Enter your credentials to login.
                             </DialogContentText>
-                                <TextField  autoFocus
+                                <ValidationTextField  autoFocus
                                             required
                                             margin="dense"
                                             id="email"
@@ -66,8 +73,9 @@ class DialogBoxLogin extends React.Component{
                                             fullWidth
                                             variant="outlined"
                                             color="success"
+                                            error={this.state.error}
                                             onChange={(e)=>this.handleUpdateEmail(e.target.value)}/>
-                                <TextField  autoFocus
+                                <ValidationTextField  autoFocus
                                             required
                                             margin="dense"
                                             id="password"
@@ -77,14 +85,14 @@ class DialogBoxLogin extends React.Component{
                                             fullWidth
                                             variant="outlined"
                                             color="success"
+                                            error={this.state.error}
                                             onChange={(e)=>this.handleUpdatePwd(e.target.value)}/>
                             </DialogContent>
                         <DialogActions>
                             <Button sx={{"color": "#d32f2f"}} onClick={closeDialog.bind(this)}>Cancel</Button>
-                            <Button sx={{"color": "#5b8d44"}} type="submit"/*onClick={this.handleSubmit.bind(this)}*/>
+                            <Button sx={{"color": "#5b8d44"}} onClick={this.handleSubmit.bind(this)}>
                                 Login</Button>
                         </DialogActions>
-                    </form>
                     <Snackbar open={this.state.open_snack} autoHideDuration={6000} onClose={closeSnack.bind(this)}>
                         <Alert onClose={closeSnack.bind(this)} severity="error" sx={{ width: '100%' }}>
                             Invalid username/password !

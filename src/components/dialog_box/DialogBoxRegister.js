@@ -134,6 +134,7 @@ class DialogBoxRegister extends React.Component{
         let snackbar_text = "Created account successfully !";
         let snackbar_color = "success";
         const errors_state = this.state.errors;
+        let open_dialog = false;
         if(checkErrors(this.state.errors)){
             if(this.state.errors.email){
                 snackbar_text = "Invalid email field";
@@ -143,15 +144,22 @@ class DialogBoxRegister extends React.Component{
                 snackbar_text = "Passwords are not identical";
             }
             snackbar_color = "error";
+            open_dialog = true;
         }else{
-            const errors = await registerUser(this.state.email, this.state.pwd);
-            if(errors.status != "201"){
-                snackbar_text =  errors.email_user.email[0];
+            try{
+                const errors = await registerUser(this.state.email, this.state.pwd);
+                if(errors.status != "201"){
+                    snackbar_text =  errors.email_user.email[0];
+                    snackbar_color = "error";
+                    errors_state.email = true;
+                }
+            }catch{
+                snackbar_text = "Server offline";
                 snackbar_color = "error";
-                errors_state.email = true;
+                open_dialog = true;
             }
         }
-        this.setState({snackbar_text : snackbar_text, snackbar_color : snackbar_color, open_snack : true, errors : errors_state});
+        this.setState({snackbar_text : snackbar_text, snackbar_color : snackbar_color, open_snack : true, errors : errors_state, open_dialog : open_dialog});
     }
 
     render(){

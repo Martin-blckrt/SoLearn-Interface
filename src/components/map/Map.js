@@ -4,10 +4,15 @@ import "leaflet/dist/leaflet.css";
 import Departement from './Departement';
 import Commune from './Commune';
 import '../../styles/Map.css';
-import {getAllDepartements, getAllCommunesOfDepartement, getCityFromCommune, getCoordsFromCode, getMeteoFromCoords} from '../misc/requests';
+import { useNavigate } from "react-router-dom";
+import {getAllDepartements, getAllCommunesOfDepartement, getCityFromCommune, getCoordsFromCode, getMeteoFromCoords, getSolarFromCoords, checkToken} from '../misc/requests';
 
 const blueOptions = { color: '#081b78', fillColor: '#081b78'};
 const greenOptions = { color: '#087020', fillColor: '#087020' };
+
+export const  withNavigation = (Component) => {
+    return props => <Component {...props} navigate={useNavigate()} />;
+} 
 
 class Map extends React.Component {
     constructor(props) {
@@ -21,6 +26,7 @@ class Map extends React.Component {
           com_ref:null,
           meteo : {},
         };
+        this.is_processing_commune = false;
         this.min_zoom = 6;
         this.map_ref = React.createRef();
         this.dep_refs = {};
@@ -28,11 +34,15 @@ class Map extends React.Component {
       }
 
     async componentDidMount() {
-        const deps = await getAllDepartements();
-        deps.forEach((dep)=>{
-            this.dep_refs[dep.properties.code] = React.createRef();
-        });
-        this.setState({departements : deps});
+        if(await checkToken()){
+            const deps = await getAllDepartements();
+            deps.forEach((dep)=>{
+                this.dep_refs[dep.properties.code] = React.createRef();
+            });
+            this.setState({departements : deps});
+        }else{
+            this.props.navigate("/");
+        }
     }
 
     handlerTimeout(map){
@@ -61,22 +71,27 @@ class Map extends React.Component {
     }
 
     async selectCommune(code_commune){
-        if(this.state.com_ref != null){
-            this.state.com_ref.setStyle(greenOptions);
+        if(!this.is_processing_commune){
+            this.is_processing_commune = true;
+            console.log(this.state.com_ref)
+            if(this.state.com_ref != null){
+                this.state.com_ref.setStyle(greenOptions);
+            }
+            const com_ref = this.com_refs[code_commune].current;
+            com_ref.setStyle(blueOptions);
+            com_ref.bringToFront();
+            await this.getDatas(code_commune);
+            this.is_processing_commune = false;
+            this.setState({com_ref:com_ref});
         }
-        console.log(this.com_refs);
-        const com_ref = this.com_refs[code_commune].current;
-        com_ref.setStyle(blueOptions);
-        com_ref.bringToFront();
-        await this.getDatas(code_commune);
-        this.setState({com_ref:com_ref});
     }
 
     async getDatas(code){
         const city = await getCityFromCommune(code);
         const coords = await getCoordsFromCode(city.codesPostaux[0]);
         const meteo = await getMeteoFromCoords(coords.lat, coords.lon);
-        console.log(meteo);
+        const solar = await getSolarFromCoords(coords.lat, coords.lon);
+        console.log(meteo, solar);
     }
 
     handlerZoomEnd(e){
@@ -111,4 +126,4 @@ class Map extends React.Component {
     }
 }
 
-export default Map;
+export default withNavigation(Map);

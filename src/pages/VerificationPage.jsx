@@ -12,8 +12,8 @@ const VerificationPage = (props) => {
     
     const verifAccount = async () =>{
         const account_token = await verifAccountRequest(verif_token);
-        sessionStorage.setItem("access_token", account_token.access);
-        sessionStorage.setItem("refresh_token", account_token.refresh);
+        localStorage.setItem("access_token", account_token.access);
+        localStorage.setItem("refresh_token", account_token.refresh);
         setTimeout(()=>{
             navigate("../home", {replace : true});
         }, 2000);

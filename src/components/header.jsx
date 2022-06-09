@@ -3,220 +3,159 @@ import '../styles/header.css';
 import logo from "../assets/Logo.png";
 import {Link} from "react-router-dom";
 import {
-    Alert,
-    Button,
-    Chip, Dialog,
-    DialogActions,
-    DialogContent,
-    DialogContentText,
-    DialogTitle,
+    Chip,
     ListItemIcon,
     Menu,
     MenuItem, Snackbar
 } from "@mui/material";
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import {Logout} from "@mui/icons-material";
-import {logout, handleLogin, isLoggedIn} from "../utils/auth";
+import {logout, isLoggedIn} from "../utils/auth";
 import TextField from "@mui/material/TextField";
 import DialogBoxLogin from "./dialog_box/DialogBoxLogin";
 import DialogBoxRegister from "./dialog_box/DialogBoxRegister";
 import DialogBoxPremium from "./dialog_box/DialogBoxPremium";
 
-export default function Header(props) {
+export default class Header extends React.Component {
 
-    const [credentials, setCredentials] = useState({
-        username: '',
-        password: ''
-    });
+    constructor(props){
+        super(props);
+        this.state = {
+            is_logged : isLoggedIn(),
+            open : false,
+            open_snack : false,
+            credentials : {
+                username : "admin",
+                premium_user : false
+            }
+        };
+        this.chip_ref = null;
 
-    const handleUpdate = event => {
-        setCredentials(prevState => {
-            return {...prevState, [event.target.name]: event.target.value}
-        })
-    }
-
-    const handleSubmit = event => {
-        event.preventDefault()
-        let worked = handleLogin(credentials)
-        handleClickSnack()
-        if (worked === undefined)
-            window.location.reload();
-    }
-
-    const handleFakeSubmit = event => {
-        event.preventDefault()
-        handleClickSnack()
-        setTimeout(window.location.reload.bind(window.location), 1000);
-    }
-
-
-    const [open, setOpen] = React.useState(false);
-    const handleClickOpen = () => {
-        setOpen(true);
-    };
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const [openLogin, setOpenLogin] = React.useState(false);
-    const handleClickOpenLogin = () => {
-        setOpenLogin(true);
-    };
-    const handleCloseLogin = () => {
-        setOpenLogin(false);
-    };
-
-
-    const [openSnack, setOpenSnack] = React.useState(false);
-
-    const handleClickSnack = () => {
-        setOpenSnack(true);
-    };
-
-    const handleCloseSnack = (event, reason) => {
-        if (reason === 'clickaway') {
-            return;
+        this.setChipRef = elt =>{
+            this.chip_ref = elt;
         }
+    }
 
-        setOpenSnack(false);
+    refreshLogin(is_logged){
+        this.setState({is_logged : is_logged});
+    }
+
+    handleClickChip(){
+        this.setState({open : !this.state.open});
     };
 
-    const premiumUser = false;
+    handleLogout(){
+        window.localStorage.removeItem("access_token");
+        window.localStorage.removeItem("refresh_token");
+        window.location.reload();
+    };
 
-    return (
-        <div className="topContainer">
-            <a href="/">
-                <div className="logoContainer">
-                    <img className="logoImg" src={logo} alt="logo" />
-                    <div className="logoText">
-                        SoLearn
+    render(){
+        return (
+            <div className="topContainer">
+                <a href="/">
+                    <div className="logoContainer">
+                        <img className="logoImg" src={logo} alt="logo" />
+                        <div className="logoText">
+                            SoLearn
+                        </div>
                     </div>
-                </div>
-            </a>
-            <div className="endContainer">
-                <Link to="/about">
-                    {props.aboutLoc ? (
-                        <div className="aboutContainer" style={{fontWeight: 500}}>
-                            About
+                </a>
+                <div className="endContainer">
+                    <Link to="/about">
+                        {this.props.aboutLoc ? (
+                            <div className="aboutContainer" style={{fontWeight: 500}}>
+                                About
+                            </div>
+                        ) : (
+                            <div className="aboutContainer">
+                                About
+                            </div>
+                        )}
+                    </Link>
+                    {this.state.is_logged ? (
+                        <div className="notPremiumContainer">
+                            <Link to="/map">
+                                {!this.props.aboutLoc ? (
+                                    <div className="aboutContainer" style={{fontWeight: 500}}>
+                                        Map
+                                    </div>
+                                ) : (
+                                    <div className="aboutContainer">
+                                        Map
+                                    </div>
+                                )}
+                            </Link>
+
+                            <div className="accountContainer">
+                                <Chip icon={<AccountCircleIcon fontSize="large"/>}
+                                    sx={{ width: "200px", height: "50px", color: "#005403", borderColor: "#005403" }}
+                                    label="Olivier Giroud"
+                                    color="success"
+                                    variant="outlined"
+                                    ref={this.setChipRef.bind(this)}
+                                    onClick={this.handleClickChip.bind(this)}/>
+                                <Menu
+                                    anchorEl={this.chip_ref}
+                                    id="account-menu"
+                                    open={this.state.open}
+                                    // onClose={handleClose}
+                                    // onClick={handleClose}
+                                    PaperProps={{
+                                        elevation: 0,
+                                        sx: {
+                                            overflow: 'visible',
+                                            filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
+                                            mt: 1.5,
+                                            '& .MuiAvatar-root': {
+                                                width: 32,
+                                                height: 32,
+                                                ml: -0.5,
+                                                mr: 1,
+                                            },
+                                            '&:before': {
+                                                content: '""',
+                                                display: 'block',
+                                                position: 'absolute',
+                                                top: 0,
+                                                right: 14,
+                                                width: 10,
+                                                height: 10,
+                                                bgcolor: 'background.paper',
+                                                transform: 'translateY(-50%) rotate(45deg)',
+                                                zIndex: 0,
+                                            },
+                                        },
+                                    }}
+                                    transformOrigin={{ horizontal: 'right', vertical: 'top' }}
+                                    anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
+                                    <MenuItem onClick={event => {
+                                        event.preventDefault()
+                                        this.handleClickChip()
+                                        logout(this.handleLogout.bind(this))
+                                    }}>
+                                        <ListItemIcon>
+                                            <Logout fontSize="small"/>
+                                        </ListItemIcon>
+                                        Logout
+                                    </MenuItem>
+                                </Menu>
+                                {!this.state.credentials.premium_user ? (
+                                    <div className="notPremiumContainer">
+                                        <DialogBoxPremium openedFrom={"header"}></DialogBoxPremium>
+                                    </div>
+                                ) : (<div/>)}
+                            </div>
                         </div>
                     ) : (
-                        <div className="aboutContainer">
-                            About
+                        <div className="notPremiumContainer">
+                            <DialogBoxLogin openedFrom={"header"} refreshLogin={this.refreshLogin.bind(this)}></DialogBoxLogin>
+                            <DialogBoxRegister openedFrom={"header"}></DialogBoxRegister>
+                            <DialogBoxPremium openedFrom={"header"}></DialogBoxPremium>
                         </div>
                     )}
-                </Link>
-                {isLoggedIn() ? (
-                    <div className="accountContainer">
-                        <Chip icon={<AccountCircleIcon fontSize="large"/>}
-                              sx={{ width: "200px", height: "50px", color: "#005403", borderColor: "#005403" }}
-                              label="Olivier Giroud"
-                              color="success"
-                              variant="outlined"
-                              onClick={handleClickOpen}/>
-                        <Menu
-                            anchorEl={open}
-                            id="account-menu"
-                            open={open}
-                            onClose={handleClose}
-                            onClick={handleClose}
-                            PaperProps={{
-                                elevation: 0,
-                                sx: {
-                                    overflow: 'visible',
-                                    filter: 'drop-shadow(0px 2px 8px rgba(0,0,0,0.32))',
-                                    mt: 1.5,
-                                    '& .MuiAvatar-root': {
-                                        width: 32,
-                                        height: 32,
-                                        ml: -0.5,
-                                        mr: 1,
-                                    },
-                                    '&:before': {
-                                        content: '""',
-                                        display: 'block',
-                                        position: 'absolute',
-                                        top: 0,
-                                        right: 14,
-                                        width: 10,
-                                        height: 10,
-                                        bgcolor: 'background.paper',
-                                        transform: 'translateY(-50%) rotate(45deg)',
-                                        zIndex: 0,
-                                    },
-                                },
-                            }}
-                            transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-                            anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}>
-                            <MenuItem onClick={event => {
-                                event.preventDefault()
-                                handleClickSnack()
-                                logout(() => window.location.reload())
-                            }}>
-                                <ListItemIcon>
-                                    <Logout fontSize="small"/>
-                                </ListItemIcon>
-                                Logout
-                            </MenuItem>
-                        </Menu>
-                        {!premiumUser ? (
-                            <div className="notPremiumContainer">
-                                <DialogBoxPremium openedFrom={"header"}></DialogBoxPremium>
-                            </div>
-                        ) : (<div/>)}
-                    </div>
-                ) : (
-                    <div className="notPremiumContainer">
-                        <DialogBoxLogin></DialogBoxLogin>
-                        <DialogBoxRegister openedFrom={"header"}></DialogBoxRegister>
-                        <DialogBoxPremium openedFrom={"header"}></DialogBoxPremium>
-                        {/* <Dialog open={open} onClose={handleClose}>
-                            <DialogTitle>Get Premium</DialogTitle>
-                            <DialogContent>
-                                <DialogContentText>
-                                    With premium, get unlimited runs on our model, as well as a financial estimate !
-                                </DialogContentText>
-                                <TextField  autoFocus
-                                            required
-                                            margin="dense"
-                                            id="username"
-                                            label="Username"
-                                            name="username"
-                                            type="text"
-                                            fullWidth
-                                            variant="outlined"/>
-                                <TextField  autoFocus
-                                            required
-                                            margin="dense"
-                                            id="password"
-                                            label="Password"
-                                            name="password"
-                                            type="password"
-                                            fullWidth
-                                            variant="outlined"/>
-                                <TextField  autoFocus
-                                            required
-                                            margin="dense"
-                                            id="email"
-                                            label="Email Address"
-                                            name="email"
-                                            type="email"
-                                            fullWidth
-                                            variant="outlined"/>
-                            </DialogContent>
-                            <DialogActions>
-                                <Button sx={{"color": "#5b8d44"}} onClick={handleClose}>Cancel</Button>
-                                <Button sx={{"color": "#5b8d44"}} onClick={event => {handleFakeSubmit(event)}}>
-                                    Subscribe</Button>
-                            </DialogActions>
-                            <Snackbar open={openSnack} autoHideDuration={6000} onClose={handleCloseSnack}>
-                                <Alert onClose={handleCloseSnack} severity="success" sx={{ width: '100%' }}>
-                                    Created account successfully !
-                                </Alert>
-                            </Snackbar>
-                        </Dialog> */}
-                    </div>
-                )}
+                </div>
             </div>
-        </div>
-    )
+        )
+    }
 }
