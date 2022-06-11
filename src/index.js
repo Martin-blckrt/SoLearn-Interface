@@ -14,27 +14,25 @@ import {isLoggedIn} from "./utils/auth";
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
-    <React.StrictMode>
-        <Router>
-            <Routes>
-                <Route exact path="/"
-                       element={isLoggedIn() ? (<Navigate replace to="/map"/>) : (<Navigate replace to="/about"/>)}/>
-                <Route exact path="/map" element={<MapPage/>}/>
-                <Route path="/results" element={<ResultsPage/>}/>
-                <Route exact path="/about" element={<AboutPage/>}/>
-                <Route path="/verification/:token" element={<VerificationPage/>}/>
-                <Route
-                    path="*"
-                    element={
-                        <main>
-                            <Header/>
-                            <p style={{paddingLeft: "25px"}}>Looks like you have fat fingers !</p>
-                        </main>
-                    }
-                />
-            </Routes>
-        </Router>
-  </React.StrictMode>
+    <Router>
+        <Routes>
+            <Route exact path="/"
+                    element={isLoggedIn() ? (<Navigate replace to="/map"/>) : (<Navigate replace to="/about"/>)}/>
+            <Route exact path="/map" element={<MapPage/>}/>
+            <Route path="/results" element={<ResultsPage/>}/>
+            <Route exact path="/about" element={<AboutPage/>}/>
+            <Route path="/verification/:token" element={<VerificationPage/>}/>
+            <Route
+                path="*"
+                element={
+                    <main>
+                        <Header/>
+                        <p style={{paddingLeft: "25px"}}>Looks like you have fat fingers !</p>
+                    </main>
+                }
+            />
+        </Routes>
+    </Router>
 );
 
 // If you want to start measuring performance in your app, pass a function

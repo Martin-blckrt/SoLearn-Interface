@@ -1,129 +1,61 @@
 import '../styles/ResultsPage.css';
 
-import Stack from '@mui/material/Stack';
-import LinearProgress from '@mui/material/LinearProgress';
-import Header from "../components/header";
-import React, {useEffect, useState} from "react";
-import Graph from "../assets/graph.png";
-import SolarPanelGif from "../assets/solar panel.gif";
-import {FileDownloadOutlined} from "@mui/icons-material";
-import FinancialEstimate from "../components/financialEstimate";
-import {
-    Chart as ChartJS,
-    CategoryScale,
-    LinearScale,
-    PointElement,
-    LineElement,
-    Title,
-    Tooltip,
-    Legend,
-  } from 'chart.js';
-  import { Line } from 'react-chartjs-2';
+import React from "react";
+import { useLocation } from 'react-router';
+import { callPredictor } from '../components/misc/requests';
+import Results from '../components/results/Results';
+import Loading from '../components/results/Loading';
 
-function ResultsPage(props) {
-    const [isShown, setIsShown] = useState(false);
-    useEffect(() => {
-        setTimeout(() => {
-            setIsShown(true);
-        }, 3000);
-    }, []);
-
-    ChartJS.register(
-        CategoryScale,
-        LinearScale,
-        PointElement,
-        LineElement,
-        Title,
-        Tooltip,
-        Legend
-      );
-
-      const options = {
-        responsive: true,
-        plugins: {
-          legend: {
-            display: false,
-            position: 'top' ,
-          },
-          title: {
-            display: false,
-            text: 'Chart.js Line Chart',
-          },
-        },
-      };
-
-      const labels = [
-        'January',
-        'February',
-        'March',
-        'April',
-        'May',
-        'June',
-        'July',
-        'August',
-        'September',
-        'October',
-        'November',
-        'December'
-    ];
-
-    const data = {
-        labels: labels,
-        datasets: [{backgroundColor: '#005403',
-            borderColor: '#5b8d44',
-            data: [0, 10, 5, 2, 20, 30, 45],
-        }]
-    };
-
-    const config = {
-        type: 'line',
-        data: data,
-        options: {}
-    };
-
-    if (isShown) {
+export const withRouter = (Component) => {
+    const Wrapper = (props) => {
+        const params = useLocation()
         return (
-            <div>
-                <Header/>
-                <div className="pageResultsContainer">
-                    <div className="leftResultsContainer">
-                        <div className="resultsTitle">
-                            Estimated Production for <a className="locationTitle">Here</a>
-                        </div>
-                        <div className="graphContainer">
-                            <Line options={options} data={data} />
-                        </div>
-                        <div className="downloadContainer">
-                            <FileDownloadOutlined sx={{ marginRight: "4px"}}/>
-                            Download the data as a json file
-                        </div>
-                    </div>
-                    <div className="rightResultsContainer">
-                        <div className="resultsTitle">
-                            Financial Estimate
-                        </div>
-                        <div className="financialContainer">
-                            <FinancialEstimate/>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Component
+                params={params.state}
+                {...props}
+            />
         );
-    } else {
-        return (
+    };
+    
+    return Wrapper;
+  };
+
+class ResultsPage extends React.Component {
+
+    constructor(props){
+        super(props);
+        this.city_code = props.params.city_code;
+        this.latitude = props.params.latitude;
+        this.longitude = props.params.longitude;
+        this.datas = null;
+        this.state = {
+            loading : true
+        }
+    }
+
+    async componentDidMount(){
+        try{
+            const datas = await callPredictor(this.city_code, this.latitude, this.longitude);
+            this.datas = JSON.parse(datas);
+            console.log(this.datas);
+        }catch(e){
+            console.log(e);
+        }
+        this.setState({loading : false});
+    }
+
+    render(){
+        return(
             <div>
-                <Header/>
-                <Stack sx={{ width: '100%', color: '#5b8d44' }} spacing={2}>
-                    <LinearProgress color="inherit"/>
-                </Stack>
-                <div className="computingContainer">
-                    <img className="solarPanelGif" src={SolarPanelGif} alt="loading"/>
-                    Computing ...
-                </div>
-            </div>
-        );
+            {!this.state.loading ?
+                <Results datas={this.datas} city_name={this.props.params.city_name}></Results> 
+            :
+                <Loading></Loading>
+            }  
+            </div>     
+        )
     }
 
 }
 
-export default ResultsPage;
+export default withRouter(ResultsPage);

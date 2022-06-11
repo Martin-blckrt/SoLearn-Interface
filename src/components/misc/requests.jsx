@@ -62,39 +62,6 @@ export async function getCoordsFromCode(code){
     }
 }
 
-export async function getMeteoFromCoords(lat, lon){
-    try{
-        const res = await fetch(`https://api.openweathermap.org/data/2.5/onecall?lat=${lat}&lon=${lon}&exclude=current,minutely,daily,alerts&appid=49afb958f2e6418e3e582687eeda45b4`,{
-            "method" : "GET"
-        });
-        if(res.ok){
-            const meteo = await res.json();
-            console.log(meteo);
-            return meteo;
-        }
-        console.log(res);
-    }catch(e){
-        console.log(e);
-    }
-}
-
-export async function getSolarFromCoords(lat, lon){
-    try{
-        const res = await fetch(`https://api.solcast.com.au/world_radiation/forecasts?latitude=${lat}&longitude=${lon}&hours=48&api_key=bm6u4mB_RRGjzJb_OFKvMbuVdfjS9bMl`,{
-            "method" : "GET",
-            "headers" : {
-                'Accept' : "application/json"
-            }
-        });
-        if(res.ok){
-            const solar = await res.json();
-            return solar;
-        }
-    }catch(e){
-        console.log(e);
-    }
-}
-
 export async function getCommunesFromNameOrCode(attr, query){
     const datas = await fetch("http://localhost:8000/geography/search/communes",{
         "method" : "POST",
@@ -166,5 +133,27 @@ export async function checkToken(){
         return true;
     }else{
         return false;
+    }
+}
+
+export async function callPredictor(postal_code, latitude, longitude){
+    try{
+        const req = await fetch("http://localhost:8000/models/prediction",{
+                "method" : "POST",
+                "headers" : {
+                    "content-type" : "application/json",
+                    'Authorization': `Bearer ${window.localStorage.getItem("access_token")}`
+                },
+                body:JSON.stringify({
+                    "postal_code": postal_code,
+                    "latitude" : latitude,
+                    "longitude" : longitude,
+                    "nb_days" : 2
+                })
+            });
+        const datas = await req.json();
+        return datas.data;
+    }catch(e){
+        console.log(e);
     }
 }

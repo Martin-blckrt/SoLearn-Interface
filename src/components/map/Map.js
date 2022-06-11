@@ -87,11 +87,9 @@ class Map extends React.Component {
     }
 
     async getDatas(code){
-        const city = await getCityFromCommune(code);
-        const coords = await getCoordsFromCode(city.codesPostaux[0]);
-        const meteo = await getMeteoFromCoords(coords.lat, coords.lon);
-        const solar = await getSolarFromCoords(coords.lat, coords.lon);
-        console.log(meteo, solar);
+        const city_data = await getCityFromCommune(code);
+        const coords = await getCoordsFromCode(city_data.codesPostaux[0]);
+        this.props.setCityCodeAndCoords(city_data.codesPostaux[0], coords, city_data.nom);
     }
 
     handlerZoomEnd(e){

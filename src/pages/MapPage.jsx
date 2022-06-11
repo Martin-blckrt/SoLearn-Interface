@@ -6,6 +6,12 @@ import AdvancedSearch from "../components/advancedSearch"
 import Map from '../components/map/Map';
 import React from 'react';
 import latinize from 'latinize';
+import { Button } from '@mui/material';
+import { useNavigate } from "react-router-dom";
+
+export const  withNavigation = (Component) => {
+  return props => <Component {...props} navigate={useNavigate()} />;
+} 
 
 class MapPage extends React.Component {
 
@@ -16,10 +22,30 @@ class MapPage extends React.Component {
       advanced_name : "00",
       dep : "00-00"
     }
+    this.city_code = null;
+    this.coords = null;
+    this.city_name = "";
   }
 
   chooseAdvanced(code, name, dep){
     this.setState({advanced_code : code, advanced_name : latinize(name.toLowerCase()).replace(/['\s]/g,"-"), dep : dep})
+  }
+
+  setCityCodeAndCoords(city_code, coords, city_name){
+    this.city_code = city_code;
+    this.coords = coords;
+    this.city_name = city_name;
+  }
+
+  submitToPredictor(){
+    this.props.navigate("/results", {state : {
+      city_code : this.city_code,
+      latitude : this.coords.lat,
+      longitude : this.coords.lon,
+      city_name: this.city_name
+    }});
+    //const datas = callPredictor(this.city_code, this.coords.lat, this.coords.lon);
+    //console.log(datas);
   }
 
   render(){
@@ -32,9 +58,10 @@ class MapPage extends React.Component {
             </MapTitle>
             <AdvancedSearch chooseAdvanced={this.chooseAdvanced.bind(this)}>
             </AdvancedSearch>
+            <Button onClick={this.submitToPredictor.bind(this)}>Predict</Button>
           </div>
           <div className="rightMapContainer">
-              <Map dep={this.state.dep} advancedCode={this.state.advanced_code} advancedName={this.state.advanced_name}/>
+              <Map dep={this.state.dep} advancedCode={this.state.advanced_code} advancedName={this.state.advanced_name} setCityCodeAndCoords={this.setCityCodeAndCoords.bind(this)}/>
           </div>
         </div>
       </div>
@@ -42,4 +69,4 @@ class MapPage extends React.Component {
   }
 }
 
-export default MapPage;
+export default withNavigation(MapPage);

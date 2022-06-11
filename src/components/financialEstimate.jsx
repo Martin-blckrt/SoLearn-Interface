@@ -9,14 +9,14 @@ export default function FinancialEstimate(props) {
         return (
             <div className="container">
                 <div className="bigNumber">
-                    580€ <p className="earned">over the last 7 days</p>
+                    {Number(props.total_estimated * 0.1814).toFixed(2)} € <p className="earned">over the last 48 hours</p>
                 </div>
                 <div className="financialInfo">
                     <div className="extraFInfo">
-                        235 kW <p className="extraFinancial">Power resold</p>
+                        {props.total_estimated} kW <p className="extraFinancial">Power resold</p>
                     </div>
                     <div className="extraFInfo">
-                        3.21 €/kW<p className="extraFinancial">Resell rate</p>
+                        0,1814 €/kW<p className="extraFinancial">Resell rate</p>
                     </div>
                 </div>
             </div>
