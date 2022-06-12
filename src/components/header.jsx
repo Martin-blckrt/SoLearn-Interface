@@ -140,12 +140,12 @@ export default class Header extends React.Component {
                                         Logout
                                     </MenuItem>
                                 </Menu>
-                                {!this.state.credentials.premium_user ? (
+                            </div>
+                            {!this.state.credentials.premium_user ? (
                                     <div className="notPremiumContainer">
                                         <DialogBoxPremium openedFrom={"header"}></DialogBoxPremium>
                                     </div>
-                                ) : (<div/>)}
-                            </div>
+                            ) : <div/>}
                         </div>
                     ) : (
                         <div className="notPremiumContainer">

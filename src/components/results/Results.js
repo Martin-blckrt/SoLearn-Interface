@@ -38,6 +38,7 @@ export default function Results(props){
 
     const options = {
         responsive: true,
+        maintainAspectRation : false,
         plugins: {
           legend: {
             display: false,
@@ -57,12 +58,6 @@ export default function Results(props){
             data: predictions_to_display,
         }]
     };
-
-    const config = {
-        type: 'line',
-        data: data,
-        options: {}
-    };
     
     return(
         <div>
@@ -73,7 +68,7 @@ export default function Results(props){
                         Estimated Production for <span className="locationTitle">{props.city_name}</span> based on the next <span className="locationTitle">48h</span>
                     </div>
                     <div className="graphContainer">
-                        <Line options={options} data={data} />
+                        <Line options={options} height={"100%"} data={data} />
                     </div>
                 </div>
                 <div className="rightResultsContainer">

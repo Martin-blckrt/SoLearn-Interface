@@ -6,7 +6,7 @@ import AdvancedSearch from "../components/advancedSearch"
 import Map from '../components/map/Map';
 import React from 'react';
 import latinize from 'latinize';
-import { Button } from '@mui/material';
+import { Button, Box } from '@mui/material';
 import { useNavigate } from "react-router-dom";
 
 export const  withNavigation = (Component) => {
@@ -58,7 +58,9 @@ class MapPage extends React.Component {
             </MapTitle>
             <AdvancedSearch chooseAdvanced={this.chooseAdvanced.bind(this)}>
             </AdvancedSearch>
-            <Button onClick={this.submitToPredictor.bind(this)}>Predict</Button>
+            <Box sx={{alignSelf : "end", height : "50%", display:"flex"}}>
+              <Button variant="contained" sx={{backgroundColor : "#005403", alignSelf:"end"}} onClick={this.submitToPredictor.bind(this)}>Predict</Button>
+            </Box>
           </div>
           <div className="rightMapContainer">
               <Map dep={this.state.dep} advancedCode={this.state.advanced_code} advancedName={this.state.advanced_name} setCityCodeAndCoords={this.setCityCodeAndCoords.bind(this)}/>

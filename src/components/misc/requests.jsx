@@ -66,7 +66,8 @@ export async function getCommunesFromNameOrCode(attr, query){
     const datas = await fetch("http://localhost:8000/geography/search/communes",{
         "method" : "POST",
         "headers" : {
-            "content-type" : "application/json"
+            "content-type" : "application/json",
+            'Authorization': `Bearer ${window.localStorage.getItem("access_token")}`
         },
         body:JSON.stringify({
             "attr": attr,
@@ -129,10 +130,23 @@ export async function verifAccountRequest(verif_token){
 }
 
 export async function checkToken(){
-    if(window.localStorage.getItem("access_token") != null && window.localStorage.getItem("refresh_token") != null){
-        return true;
-    }else{
-        return false;
+    try{
+        const res = await fetch("http://localhost:8000/accounts/token-check/", {
+            "method" : "POST",
+            "headers":{
+                "Content-type" : "application/json"
+            },
+            body : JSON.stringify({
+                "access_token" : window.localStorage.getItem("access_token")
+            })
+        });
+        if(res.status != 200){
+            throw new Error(res.status);
+        }
+        const result = await res.json();
+        return result;
+    }catch(error){
+        throw new Error(error);
     }
 }
 

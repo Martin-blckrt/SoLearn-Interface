@@ -27,7 +27,7 @@ export default function AdvancedSearch(props) {
                     <div className="advanced_container">
                         <LocationInput handler={props.chooseAdvanced}/>
                         <NumberInput className="number"/>
-                        <Link to="/results">
+                        {/* <Link to="/results">
                             <Box className="predict_button">
                                 <Fab sx={{
                                     color: 'white',
@@ -39,7 +39,7 @@ export default function AdvancedSearch(props) {
                                     <RightIcon/>
                                 </Fab>
                             </Box>
-                        </Link>
+                        </Link> */}
                     </div>
                 </AccordionDetails>
             </Accordion>

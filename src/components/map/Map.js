@@ -34,15 +34,11 @@ class Map extends React.Component {
       }
 
     async componentDidMount() {
-        if(await checkToken()){
-            const deps = await getAllDepartements();
-            deps.forEach((dep)=>{
-                this.dep_refs[dep.properties.code] = React.createRef();
-            });
-            this.setState({departements : deps});
-        }else{
-            this.props.navigate("/");
-        }
+        const deps = await getAllDepartements();
+        deps.forEach((dep)=>{
+            this.dep_refs[dep.properties.code] = React.createRef();
+        });
+        this.setState({departements : deps});
     }
 
     handlerTimeout(map){
@@ -73,7 +69,6 @@ class Map extends React.Component {
     async selectCommune(code_commune){
         if(!this.is_processing_commune){
             this.is_processing_commune = true;
-            console.log(this.state.com_ref)
             if(this.state.com_ref != null){
                 this.state.com_ref.setStyle(greenOptions);
             }

@@ -1,4 +1,4 @@
-import React from 'react';
+import {React, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom/client';
 import './styles/index.css';
 import HomePage from './pages/HomePage';
@@ -10,16 +10,35 @@ import reportWebVitals from './utils/reportWebVitals';
 import {BrowserRouter as Router, Route, Routes, Navigate} from "react-router-dom";
 import VerificationPage from './pages/VerificationPage';
 import {isLoggedIn} from "./utils/auth";
+import { checkToken } from './components/misc/requests';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
+
+const AuthWrapper = ({ children }) => {
+    const [auth, setAuth] = useState(false);
+    useEffect(() => {
+        async function fetchData() {
+            try{
+                await checkToken();
+                setAuth(true);
+            }catch{
+                setAuth(false);
+                //localStorage.removeItem("access_token");
+            }
+        }
+        fetchData();
+    }, []);
+
+    return auth ? children : <Navigate to="/about"/> ;
+  };
 
 root.render(
     <Router>
         <Routes>
             <Route exact path="/"
-                    element={isLoggedIn() ? (<Navigate replace to="/map"/>) : (<Navigate replace to="/about"/>)}/>
-            <Route exact path="/map" element={<MapPage/>}/>
-            <Route path="/results" element={<ResultsPage/>}/>
+                    element={<Navigate to="/about"/>}/>
+            <Route exact path="/map" element = {<MapPage/>}/>
+            <Route path="/results" element = {<ResultsPage/>}/>
             <Route exact path="/about" element={<AboutPage/>}/>
             <Route path="/verification/:token" element={<VerificationPage/>}/>
             <Route

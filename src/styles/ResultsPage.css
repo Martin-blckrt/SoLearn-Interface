@@ -9,7 +9,6 @@
 .leftResultsContainer {
     display: flex;
     flex-direction: column;
-    flex: 80vh;
 }
 
 .rightResultsContainer {
