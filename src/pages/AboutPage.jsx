@@ -1,5 +1,5 @@
 import '../styles/AboutPage.css';
-import vidPres from '../assets/PremierJetLeger.mp4'
+import vidPres from '../assets/SoLearn_-_Presentation_du_projet..mp4'
 import mlIMG from '../assets/ml.jpg'
 import dsIMG from '../assets/dataset.png'
 import rsIMG from '../assets/rising_seas.jpg'
