@@ -13,10 +13,10 @@ export default function FinancialEstimate(props) {
                 </div>
                 <div className="financialInfo">
                     <div className="extraFInfo">
-                        {props.total_estimated} kW <p className="extraFinancial">Power resold</p>
+                        {props.total_estimated} kW/h <p className="extraFinancial">Power resold</p>
                     </div>
                     <div className="extraFInfo">
-                        0,1814 €/kW<p className="extraFinancial">Resell rate</p>
+                        0,1814 €/kW/h<p className="extraFinancial">Resell rate</p>
                     </div>
                 </div>
             </div>
